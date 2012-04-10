@@ -48,8 +48,12 @@ function init() {
 
     server.use(connect.static(__dirname + '/../../site/public'))
 
-	api.connect({ name:'reports', server: 'staff.mongohq.com', port: 10052 },
-	    function(err) {
+	api.connect({ 
+		name:'reports', server: 'staff.mongohq.com', port: 10052, 
+		username: 'app', password: process.env.DB_PWD 
+		},
+	    
+		function(err) {
 	      if (err) return console.log('Failed to connect to db: ' + err);
 
 	      server.listen(process.env.PORT || 8180)

@@ -170,6 +170,8 @@ exports.connect = function(options, callback) {
     options.name = options.name || 'reports';
     options.server = options.server || '127.0.0.1';
     options.port = options.port || 27017;
+	options.username = options.username;
+	options.password = options.password;
 
     var server = new mongodb.Server(options.server, options.port, {
         /*auto_reconnect:true*/
