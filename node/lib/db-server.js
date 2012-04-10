@@ -52,7 +52,7 @@ function init() {
 	    function(err) {
 	      if (err) return console.log('Failed to connect to db: ' + err);
 
-	      server.listen(8180)
+	      server.listen(process.env.PORT || 8180)
 	    }
 	)
 }
