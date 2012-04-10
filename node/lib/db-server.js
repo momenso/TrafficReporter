@@ -48,7 +48,7 @@ function init() {
 
     server.use(connect.static(__dirname + '/../../site/public'))
 
-	api.connect({ name:'reports', server: '127.0.0.1', port: 27017 },
+	api.connect({ name:'reports', server: 'staff.mongohq.com', port: 10052 },
 	    function(err) {
 	      if (err) return console.log('Failed to connect to db: ' + err);
 
