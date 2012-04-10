@@ -176,8 +176,6 @@ exports.connect = function(options, callback) {
 	db.open(function(err, client) {
         if (err) return callback(err);
 
-		console.log('u=' + options.username + ", p=" + options.password);
-
 		client.authenticate(options.username, options.password, function(err) {
 			if (err) return callback(err);
 		});
