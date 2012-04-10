@@ -170,17 +170,18 @@ exports.connect = function(options, callback) {
     options.name = options.name || 'reports';
     options.server = options.server || '127.0.0.1';
     options.port = options.port || 27017;
-	options.username = options.username;
-	options.password = options.password;
 
-    var server = new mongodb.Server(options.server, options.port, {
-        /*auto_reconnect:true*/
-    })
-
+    var server = new mongodb.Server(options.server, options.port, { auto_reconnect:true });
     var db = new mongodb.Db(options.name, server);
 	db.open(function(err, client) {
         if (err) return callback(err);
 
+		console.log('u=' + options.username + ", p=" + options.password);
+
+		client.authenticate(options.username, options.password, function(err) {
+			if (err) return callback(err);
+		});
+		
         db.collection('reports', function(err, collection) {
             if (err) return callback(err);
 
