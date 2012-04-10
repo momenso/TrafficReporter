@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/> 
+    <title>Waterford Places</title> 
+    <script type="text/javascript"
+            src="http://maps.google.com/maps/api/js?sensor=false"></script> 
+
+    <script type="text/javascript"> 
+    function initialize() {
+
+      var myOptions = {
+        zoom: 13,
+        center: new google.maps.LatLng(0,0), //(52.25, -7.11),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+
+      var map = new google.maps.Map(document.getElementById("map"), myOptions);
+
+      var locations = [
+        ['Riverwalk',  52.248534, -7.114684, 4],
+        ['WIT Main Campus', 52.245709, -7.139450, 5],
+        ['Bus station', 52.263407, -7.116033, 3],
+        ['Train station', 52.266316, -7.117887, 2],
+        ['Reginald\'s Tower', 52.260473, -7.105394, 1]
+      ];
+
+	  var bounds = new google.maps.LatLngBounds();
+	
+      for (var i = 0; i < locations.length; i++) {
+          var location = locations[i];
+          var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + location[3] + '|FF0000|000000';
+
+          var myLatLng = new google.maps.LatLng(location[1], location[2]);
+          var marker = new google.maps.Marker({
+              position: myLatLng,
+              map: map,
+              icon: image,
+              title: location[0],
+              zIndex: location[3]
+          });
+
+		  bounds.extend(myLatLng);
+      }
+
+	  map.fitBounds(bounds);
+    }
+    </script> 
+</head> 
+<body style="margin:0px; padding:0px;" onload="initialize();"> 
+    <div id="map" style="width:400px; height:500px;"></div> 
+</body> 
+</html>

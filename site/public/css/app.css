@@ -1,0 +1,126 @@
+
+div {
+  padding: 0px !important;
+}
+
+ul {
+  margin: 0px !important;
+}
+
+p {
+  margin: 0px !important;
+}
+
+div.content {
+  display: none;
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+}
+
+div.leftin {
+  -webkit-animation-duration: .4s;
+  -webkit-animation-name: leftin;
+}
+
+div.rightin {
+  -webkit-animation-duration: .4s;
+  -webkit-animation-name: rightin;
+}
+
+
+@-Webkit-keyframes leftin {
+  from { 
+    -webkit-transform: translateX(100%);
+  }
+  to { 
+    -webkit-transform: translateX(0);
+   }
+}
+
+
+@-webkit-keyframes rightin {
+  from { 
+    -webkit-transform: translateX(-100%);
+  }
+  to { 
+    -webkit-transform: translateX(0);
+   }
+}
+
+
+
+
+.custom-tabbar .ui-btn .ui-btn-inner { 
+    padding-top: 40px !important; 
+}
+
+.custom-tabbar .ui-btn .ui-icon { 
+    width: 40px!important; height: 30px!important; margin-left: -20px !important; 
+    box-shadow: none!important; -moz-box-shadow: none!important; 
+    -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; 
+    border-radius: 0 !important; 
+}
+
+
+li .ui-icon {
+    margin-top: 6px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat; 
+    background-color: transparent;
+    background-size: auto 100%;
+}
+
+
+
+div.content-area {
+    padding: 10px !important;
+}
+
+.charthbar {
+    height: 10px;
+    width: 20px;
+}
+
+#sense_accel_x { background-color: red; }
+#sense_accel_y { background-color: green; }
+#sense_accel_z { background-color: blue; }
+
+
+
+#tab_sense .ui-icon { background-image: url(../img/radar-lo.png) }
+#tab_sense.ui-btn-active .ui-icon { background-image: url(../img/radar-hi.png) }
+
+#tab_capture .ui-icon { background-image: url(../img/camera-lo.png) }
+#tab_capture.ui-btn-active .ui-icon { background-image: url(../img/camera-hi.png) }
+
+#tab_status .ui-icon { background-image: url(../img/dashboard-lo.png) }
+#tab_status.ui-btn-active .ui-icon { background-image: url(../img/dashboard-hi.png) }
+
+#tab_storage .ui-icon { background-image: url(../img/cabinet-lo.png) }
+#tab_storage.ui-btn-active .ui-icon { background-image: url(../img/cabinet-hi.png) }
+
+#tab_phonegap .ui-icon { background-image: url(../img/iphone-lo.png) }
+#tab_phonegap.ui-btn-active .ui-icon { background-image: url(../img/iphone-hi.png) }
+
+
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+
+#tab_sense .ui-icon { background-image: url(../img/radar-lo@2x.png) }
+#tab_sense.ui-btn-active .ui-icon { background-image: url(../img/radar-hi@2x.png) }
+
+#tab_capture .ui-icon { background-image: url(../img/camera-lo@2x.png) }
+#tab_capture.ui-btn-active .ui-icon { background-image: url(../img/camera-hi@2x.png) }
+
+#tab_status .ui-icon { background-image: url(../img/dashboard-lo@2x.png) }
+#tab_status.ui-btn-active .ui-icon { background-image: url(../img/dashboard-hi@2x.png) }
+
+#tab_storage .ui-icon { background-image: url(../img/cabinet-lo@2x.png); }
+#tab_storage.ui-btn-active .ui-icon { background-image: url(../img/cabinet-hi@2x.png) }
+
+#tab_phonegap .ui-icon { background-image: url(../img/iphone-lo@2x.png) }
+#tab_phonegap.ui-btn-active .ui-icon { background-image: url(../img/iphone-hi@2x.png) }
+
+}
+
+
