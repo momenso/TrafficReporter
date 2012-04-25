@@ -4,33 +4,20 @@ var app = {
     model: {},
     view: {},
     tabs: {
-        sense: {
+        monitor: {
             index: i++,
             icon: '73-radar',
         },
-        capture: {
+        report: {
             index: i++,
             icon: '86-camera',
-        },
-        status: {
-            index: i++,
-            icon: '81-dashboard',
-        },
-        storage: {
-            index: i++,
-            icon: '33-cabinet',
-        },
-        phonegap: {
-            index: i++,
-            icon: '32-iphone',
-        },
+        }
     },
     platform: /Android/.test(navigator.userAgent) ? 'android': 'ios',
-    initialtab: 'sense'
+    initialtab: 'monitor'
 }
 
 console.log(app)
-
 
 var bb = {
     model: {},
@@ -227,36 +214,16 @@ bb.init = function() {
     })
 
 
-    bb.view.Sense = Backbone.View.extend({
+    bb.view.Monitor = Backbone.View.extend({
         initialize: function() {
             var self = this
             _.bindAll(self)
 
             self.elem = {
-                // accel_watch_btn: $('#sense_accel_watch'),
-                // accel_stop_btn: $('#sense_accel_stop'),
-                // accel_x: $('#sense_accel_x'),
-                // accel_y: $('#sense_accel_y'),
-                // accel_z: $('#sense_accel_z'),
-                // accel_x_val: $('#sense_accel_x_val'),
-                // accel_y_val: $('#sense_accel_y_val'),
-                // accel_z_val: $('#sense_accel_z_val'),
-                // 
-                // button: $('#sense_button')
 				currentLocation: $('input#currentLocation'),
 				speed: $('input#speed'),
 				refresh: $('button#refresh')
             }
-
-            // self.elem.accel_watch_btn.tap(function() {
-            //     self.watchID = navigator.accelerometer.watchAcceleration(self.update_accel, app.erroralert, {
-            //         frequency: 10
-            //     })
-            // })
-            // 
-            // self.elem.accel_stop_btn.tap(function() {
-            //     self.watchID && navigator.accelerometer.clearWatch(self.watchID)
-            // })
 
 			self.elem.refresh.tap(function() {
 				navigator.geolocation.getCurrentPosition(
@@ -347,7 +314,7 @@ bb.init = function() {
     })
 
 
-    bb.view.Capture = Backbone.View.extend({
+    bb.view.Report = Backbone.View.extend({
         initialize: function() {
             var self = this;
             _.bindAll(self);
@@ -370,58 +337,6 @@ bb.init = function() {
         },
 
         render: function() { }
-    })
-
-
-    bb.view.Status = Backbone.View.extend({
-        initialize: function() {
-            var self = this
-            _.bindAll(self)
-
-            self.elem = { }
-        },
-        render: function() { }
-    })
-
-
-    bb.view.Storage = Backbone.View.extend({
-        initialize: function() {
-            var self = this
-            _.bindAll(self)
-
-            self.elem = { }
-        },
-        render: function() { }
-    })
-
-
-    bb.view.PhoneGap = Backbone.View.extend({
-        initialize: function() {
-            var self = this
-            _.bindAll(self)
-
-            self.elem = {
-                name: $('#phonegap_name'),
-                phonegap: $('#phonegap_phonegap'),
-                platform: $('#phonegap_platform'),
-                uuid: $('#phonegap_uuid'),
-                version: $('#phonegap_version'),
-            }
-        },
-
-        render: function() {
-            var self = this;
-            if (typeof device == 'undefined') {
-                alert('Cordova environment required!');
-            }
-            else {
-                self.elem.name.text(device.name);
-                self.elem.phonegap.text(device.cordova);
-                self.elem.platform.text(device.platform);
-                self.elem.uuid.text(device.uuid);
-                self.elem.version.text(device.version);
-            }
-        }
     })
 
 }
@@ -496,11 +411,8 @@ app.init = function() {
     app.view.content = new bb.view.Content(app.initialtab)
     app.view.content.render()
 
-    app.view.sense = new bb.view.Sense()
-    app.view.capture = new bb.view.Capture()
-    app.view.status = new bb.view.Status()
-    app.view.storage = new bb.view.Storage()
-    app.view.phonegap = new bb.view.PhoneGap()
+    app.view.monitor = new bb.view.Monitor()
+    app.view.Report = new bb.view.Report()
 
     app.start()
 

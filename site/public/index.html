@@ -37,7 +37,7 @@
   </div>
 
   <div id="content" data-role="content">	
-    <div id="content_sense" class="content scroller">
+    <div id="content_monitor" class="content scroller">
       <div class="content-area">
 
         <p>Location</p>
@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div id="content_capture" class="content">
+    <div id="content_report" class="content">
 		<div class="content-area">
 			<p>Current Location</p>
 			<table>
@@ -72,46 +72,13 @@
 	    </div>
     </div>
 
-    <div id="content_status" class="content scroller">
-      <div class="content-area">
-      </div>
-    </div>
-
-    <div id="content_storage" class="content scroller">
-      <div class="content-area">
-      </div>
-    </div>
-
-    <div id="content_phonegap" class="content scroller">
-      <div class="content-area">
-        <h3>Device Info</h3>
-
-        <div class="ui-grid-a">
-	  <div class="ui-block-a">name:</div>
-	  <div class="ui-block-b"><span id="phonegap_name"></span></div>
-	  <div class="ui-block-a">phonegap:</div>
-	  <div class="ui-block-b"><span id="phonegap_phonegap"></span></div>
-	  <div class="ui-block-a">platform:</div>
-	  <div class="ui-block-b"><span id="phonegap_platform"></span></div>
-	  <div class="ui-block-a">uuid:</div>
-	  <div class="ui-block-b"><span id="phonegap_uuid"></span></div>
-	  <div class="ui-block-a">version:</div>
-	  <div class="ui-block-b"><span id="phonegap_version"></span></div>
-        </div>
-
-      </div>
-    </div>
-
   </div>
 
-  <div id="footer" data-role="footer" class="ui-bar custom-tabbar" data-position="fixed" data-fullscreen="true">
-    <div data-role="navbar" class="ui-navbar">
-      <ul id="tabbar" class="ui-grid custom-tabbar">
-        <li><a id="tab_sense"    data-icon="custom">Sense</a></li>
-        <li><a id="tab_capture"  data-icon="custom">Capture</a></li>
-        <li><a id="tab_status"   data-icon="custom">Status</a></li>
-        <li><a id="tab_storage"  data-icon="custom">Storage</a></li>
-        <li><a id="tab_phonegap" data-icon="custom">PhoneGap</a></li>
+  <div id="footer" data-role="footer" class="ui-bar" data-position="fixed" >
+    <div data-role="navbar">
+      <ul id="tabbar">
+        <li><a id="tab_monitor" class="ui-btn-active">Monitor</a></li>
+        <li><a id="tab_report">Report</a></li>
       </ul>
     </div>
   </div>
