@@ -23,14 +23,17 @@
   <script src="js/underscore.js"></script>
   <script src="js/backbone.js"></script>
   <script src="js/iscroll.js"></script>
+  <script src="js/util.js"></script>
   <script src="js/app.js"></script>
 </head> 
 <body> 
 
 <div id="main" data-role="page">
 
-  <div id="header" data-role="header">
+  <div id="header" data-role="header" data-position="inline" data-theme="b">
+	<a href="/auth/twitter" id="login_btn" rel="external" data-role="button" data-icon="check">Login</a>
     <h1>Traffic Reporter</h1>
+	<a href="/logout" id="logout_btn" rel="external" data-role="button" data-icon="minus">Logout</a>
   </div>
 
   <div id="content" data-role="content">	

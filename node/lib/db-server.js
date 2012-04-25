@@ -1,14 +1,75 @@
+"use strict";
+
 var common = require('./common')
 var api = require('./db-rest-api')
 
+var config = common.config
 var connect = common.connect
+var everyauth = common.everyauth
+
+function init_social_login() {
+	
+	function make_promise(user, promise) {
+		api.saveUser(user, function(err, user) {
+			if (err) 
+				return promise.fail(err);
+
+			promise.fulfill(user);
+		});
+		
+		return promise;
+	}
+	
+	// turn on to see OAuth flow
+	//everyauth.debug = true
+
+	everyauth.everymodule
+		.findUserById(function (id, callback) {
+			api.loadUser(id, function (err, user) {
+				if (err) 
+					return callback(err);
+					
+				callback(null, user);
+      		});
+    	})
+    	.moduleErrback(function (err, data) {
+      		if (err) { 
+				console.dir(err);
+				throw err;
+			}
+	});
+
+	everyauth.twitter
+		.consumerKey(config.twitter.key)
+		.consumerSecret(config.twitter.secret)
+		.findOrCreateUser(function (session, accessToken, accessTokenSecret, twitterUserMetadata) {
+			var user = { 
+				id: 'tw-'+twitterUserMetadata.id, 
+				username: twitterUserMetadata.screen_name, 
+				service: 'twitter',
+				key: accessToken,
+				secret: accessTokenSecret
+			}
+
+			return make_promise(user, this.Promise());
+		})
+		.redirectPath('/');			
+}
 
 function init() {
-    var server = connect.createServer()
-    server.use(connect.logger())
-    server.use(connect.bodyParser())
-    server.use(connect.query())
 
+	init_social_login();
+	
+    var server = connect.createServer();
+	
+    server.use(connect.logger());
+    server.use(connect.bodyParser());
+	server.use(connect.cookieParser());
+    server.use(connect.query());
+	server.use(connect.session({ secret: config.secret }));
+
+	server.use(everyauth.middleware());
+	
     server.use(function(req, res, next) {
         res.sendjson$ = function(obj) {
             common.sendjson(res, obj)
@@ -30,8 +91,8 @@ function init() {
             }
         }
 
-        next()
-    })
+        next();
+    });
 
     var router = connect.router(function(app) {
         app.get('/api/ping', api.ping)
@@ -43,22 +104,30 @@ function init() {
         app.get('/api/rest/report', api.rest.list)
         app.put('/api/rest/report/:id', api.rest.update)
         app.del('/api/rest/report/:id', api.rest.del)
+
+		app.get('/user', api.rest.get_user)
     })
     server.use(router)
 
     server.use(connect.static(__dirname + '/../../site/public'))
 
 	api.connect({ 
-		name:'reports', server: 'staff.mongohq.com', port: 10052, 
-		username: 'app', password: process.env.DB_PWD 
+			name:'reports', 
+			server: 'staff.mongohq.com', 
+			port: 10052, 
+			username: 'app', 
+			password: process.env.DB_PWD 
 		},
 	    
 		function(err) {
-	      if (err) return console.log('Failed to connect to db: ' + err);
+	      	if (err) 
+				return console.log('Failed to connect to db: ' + err);
 
-	      server.listen(process.env.PORT || 8180)
+			var port = process.env.PORT || 8180;
+	      	server.listen(port)
 	    }
-	)
+	);
+  
 }
 
 

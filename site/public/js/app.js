@@ -110,15 +110,17 @@ bb.init = function() {
 
             self.elem = {
                 header: $("#header"),
-                footer: $("#footer")
+                footer: $("#footer"),
+				login_btn: $("#login_btn"),
+				logout_btn: $("#logout_btn")
             }
 
-            self.elem.header.css({
-                zIndex: 1000
-            })
-            self.elem.footer.css({
-                zIndex: 1000
-            })
+            // self.elem.header.css({
+            //     zIndex: 1000
+            // })
+            // self.elem.footer.css({
+            //     zIndex: 1000
+            // })
 
             function handletab(tabname) {
                 return function() {
@@ -130,7 +132,7 @@ bb.init = function() {
 
             var tabindex = 0
             for (var tabname in app.tabs) {
-                console.log(tabname);
+                // console.log(tabname);
                 $("#tab_" + tabname).tap(handletab(tabname));
             }
 
@@ -138,9 +140,33 @@ bb.init = function() {
             if ('android' == app.platform) {
                 app.scrollheight += self.elem.header.height();
             }
+
+			app.model.state.on('change:user', function() { 
+				self.render();
+			});
         },
 
-        render: function() { }
+        render: function() { 
+	        var self = this;
+			var user = app.model.state.get('user');
+			
+			if (user) {
+				console.log('logged as: ' + user.username);
+				self.elem.login_btn.hide();
+				self.elem.logout_btn.show();
+				// self.elem.logout_btn.text(user.username);
+
+				// self.elem.logout_btn.trigger('create');
+				// self.elem.logout_btn.button('refresh');
+				// self.elem.header.trigger('create');
+			} else {
+				console.log('No user');
+				self.elem.login_btn.show();
+				self.elem.logout_btn.hide();				
+			}
+			
+			return self;
+		}
     })
 
 
@@ -432,13 +458,19 @@ app.init_platform = function() {
 }
 
 app.start = function() {
-    $("#tab_" + app.initialtab).tap()
+    $("#tab_" + app.initialtab).tap();
+
+	http.get('/user', function(user) {
+	    if (user.id) {
+			app.model.state.set({user:user})
+		}
+	});
+
 }
 
 app.erroralert = function(error) {
     alert(error)
 }
-
 
 app.init = function() {
     console.log('start init')
@@ -449,6 +481,14 @@ app.init = function() {
 
     app.model.state = new bb.model.State()
     app.model.Reports = new bb.model.ReportList();
+
+	http.get('/user', function(user) {
+		if (user.id) {
+			app.model.state.set({user:user});
+		} else {
+			console.log("No user!");
+		}
+	});
 
     app.view.navigation = new bb.view.Navigation(app.initialtab)
     app.view.navigation.render()

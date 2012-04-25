@@ -5,7 +5,8 @@ var uuid = common.uuid
 var mongodb = common.mongodb
 
 
-var reportcoll = null
+var reportcoll = null;
+var usercoll = null;
 
 var util = {}
 util.validate = function(input) {
@@ -44,8 +45,48 @@ exports.echo = function(req, res) {
     res.sendjson$(output)
 }
 
+exports.saveUser = function(user, callback) {
+	console.log('>>> SAVEUSER: ' + user.username);
+	
+	usercoll.update({ id: user.id }, user, function(err, doc) {
+		console.log('User saved ' + (err || 'successfully.'));
+		//callback(err, doc);
+		callback(err, user);
+	});
+}
 
-exports.rest = {
+exports.loadUser = function(id, callback) {
+	console.log('>>> LOADUSER:' + id);
+	
+	//var query = util.fixid({ id: id });
+	var query = { id: id };
+
+	usercoll.findOne(query, function(err, doc) {
+		console.log('User loaded ' + (err || ('successfully: ' + doc.username)));
+		callback(err, doc);
+	});
+}
+
+exports.rest = {	
+
+	get_user: function(req, res, next) {
+		
+		console.log("get_user: " + req.user);
+		
+		var clean_user = { };
+		
+		if (req.user) {
+			clean_user.id = req.user.id
+			clean_user.username = req.user.username
+			clean_user.service = req.user.service
+		} else {
+			console.log("No user specified?")
+		}
+
+		//common.util.sendjson(res,clean_user)
+		//res.sendjson$(clean_user);
+		common.sendjson(res, clean_user);
+	},
 
     create: function(req, res) {
         console.log('>>> CREATE')
@@ -53,7 +94,7 @@ exports.rest = {
         var input = req.body
 
         if (!util.validate(input)) {
-            return res.send$(400, 'invalid')
+            return res.send$(400, 'invalid');
         }
 
         var report = {
@@ -64,8 +105,8 @@ exports.rest = {
         }
 
         reportcoll.insert(report, res.err$(function(docs) {
-            var output = util.fixid(docs[0])
-            res.sendjson$(output)
+            var output = util.fixid(docs[0]);
+            res.sendjson$(output);
         }))
     },
 
@@ -183,8 +224,18 @@ exports.connect = function(options, callback) {
         db.collection('reports', function(err, collection) {
             if (err) return callback(err);
 
+			console.log('Reports collection loaded.');
             reportcoll = collection;
             callback(/*null, database*/);
-        })
+        });
+
+		// loads the users collection
+		db.collection('users', function(err, collection) {
+			if (err) return callback(err);
+			
+			console.log('Users collection loaded.');
+			usercoll = collection;
+			callback();
+		});
     })
 }

@@ -124,3 +124,13 @@ div.content-area {
 }
 
 
+/*a.social_login {
+  height: 74px;
+  line-height: 48px;
+  font-size: 20px;
+}
+*/
+a.twitter_login {
+    background: url("../img/sign-in-with-twitter-d.png") no-repeat 10px 5px;
+}
+
