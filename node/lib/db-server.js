@@ -3,7 +3,6 @@
 var common = require('./common')
 var api = require('./db-rest-api')
 
-var config = common.config
 var connect = common.connect
 var everyauth = common.everyauth
 
@@ -40,8 +39,8 @@ function init_social_login() {
 	});
 
 	everyauth.twitter
-		.consumerKey(config.twitter.key)
-		.consumerSecret(config.twitter.secret)
+		.consumerKey(process.env.TWITTER_KEY)
+		.consumerSecret(process.env.TWITTER_SECRET)
 		.findOrCreateUser(function (session, accessToken, accessTokenSecret, twitterUserMetadata) {
 			var user = { 
 				id: 'tw-'+twitterUserMetadata.id, 
@@ -66,7 +65,7 @@ function init() {
     server.use(connect.bodyParser());
 	server.use(connect.cookieParser());
     server.use(connect.query());
-	server.use(connect.session({ secret: config.secret }));
+	server.use(connect.session());
 
 	server.use(everyauth.middleware());
 	

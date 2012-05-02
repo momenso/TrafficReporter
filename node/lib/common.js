@@ -9,7 +9,6 @@ exports.mongodb = require('mongodb')
 exports.everyauth = require('everyauth')
 exports.twitter = require('twitter')
 
-exports.config = require('./config.mine')
 
 exports.sendjson = function(res, obj) {
 	var objstr = JSON.stringify(obj)
