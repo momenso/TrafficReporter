@@ -65,7 +65,7 @@ function init() {
     server.use(connect.bodyParser());
 	server.use(connect.cookieParser());
     server.use(connect.query());
-	server.use(connect.session());
+	server.use(connect.session({secret: process.env.SESSION_KEY }));
 
 	server.use(everyauth.middleware());
 	
