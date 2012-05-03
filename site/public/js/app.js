@@ -293,15 +293,15 @@ bb.init = function() {
 			app.model.Reports.each(function(report) {
 				report = report.toJSON();
 				var minutes = Math.round((Date.now() - report.created) / 60000);
-				self.add_report(report.comment, report.speed, minutes);
+				self.add_report(report.user, report.comment, report.speed, minutes);
 			});
 		},
 
-		add_report: function(comment, speed, time) {
+		add_report: function(user, comment, speed, time) {
 			var list = $('#reportsListView');
             $('<li/>')
-            	.append($('<h2>', { text: comment }))
-            	.append($('<p>', { text: speed + ' km/h' }))
+            	.append($('<b>', { text: comment }))
+            	.append($('<p>', { text: user + ' @ ' + speed + ' km/h' }))
             	.append($('<span />', { text: time + ' min', class: 'ui-li-count'}))
             	.appendTo(list);
             list.listview('refresh');
@@ -326,17 +326,27 @@ bb.init = function() {
 				send: $('button#send')
             }
 
-            self.elem.send.tap(function() {
+            self.elem.send.tap(self.sendreport);
+        },
+
+        render: function() { },
+
+		sendreport: function() {
+            var self = this;
+			var user = app.model.state.get('user');
+			if (user) {
 				app.model.Reports.create({
+					user: user.username,
 					location: self.elem.currentLocation.val(),
 					speed: self.elem.speed.val(),
 					comment: self.elem.comment.val()
 				});
-            });
-
-        },
-
-        render: function() { }
+			} else {
+				alert('You must log in first!');
+			}
+			
+		    $("#tab_" + app.initialtab).tap();
+		}
     })
 
 }

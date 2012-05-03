@@ -101,6 +101,7 @@ exports.rest = {
         }
 
         var report = {
+			user: input.user,
 			location: input.location,
             speed: input.speed,
 			comment: input.comment,
