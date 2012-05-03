@@ -305,6 +305,8 @@ bb.init = function() {
             	.append($('<span />', { text: time + ' min', class: 'ui-li-count'}))
             	.appendTo(list);
             list.listview('refresh');
+
+			app.model.state.trigger('scroll-refresh')
 		},
 
         update_button: function(name) {

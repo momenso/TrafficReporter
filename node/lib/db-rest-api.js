@@ -148,7 +148,7 @@ exports.rest = {
         }
 
         reportcoll.find(query, options, res.err$(function(cursor) {
-            cursor.limit(3).toArray(res.err$(function(docs) {
+            cursor.limit(10).toArray(res.err$(function(docs) {
                 output = docs
                 output.forEach(function(item) {
                     util.fixid(item)
