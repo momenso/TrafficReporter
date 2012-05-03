@@ -6,11 +6,9 @@ var app = {
     tabs: {
         monitor: {
             index: i++,
-            icon: '73-radar',
         },
         report: {
             index: i++,
-            icon: '86-camera',
         }
     },
     platform: /Android/.test(navigator.userAgent) ? 'android': 'ios',
@@ -141,11 +139,6 @@ bb.init = function() {
 				console.log('logged as: ' + user.username);
 				self.elem.login_btn.hide();
 				self.elem.logout_btn.show();
-				// self.elem.logout_btn.text(user.username);
-
-				// self.elem.logout_btn.trigger('create');
-				// self.elem.logout_btn.button('refresh');
-				// self.elem.header.trigger('create');
 			} else {
 				console.log('No user');
 				self.elem.login_btn.show();
@@ -207,6 +200,10 @@ bb.init = function() {
 
             $("#content_" + previous).hide().removeClass('leftin').removeClass('rightin')
             $("#content_" + current).show().addClass(app.tabs[previous].index <= app.tabs[current].index ? 'leftin': 'rightin')
+
+			$("#tab_" + previous).removeClass('ui-btn-active');
+			$("#tab_" + current).addClass('ui-btn-active');
+			
             self.current = current
 
             self.render()
@@ -225,50 +222,7 @@ bb.init = function() {
 				refresh: $('button#refresh')
             }
 
-			self.elem.refresh.tap(function() {
-				navigator.geolocation.getCurrentPosition(
-				  function(position) {
-				    var latitude  = position.coords.latitude;
-				    var longitude = position.coords.longitude;
-					var speed = position.coords.speed | 0;
-				    var timestamp = new Date(position.timestamp);
-				
-					self.elem.speed.val(speed);
-				
-					console.log('loc=' + latitude + "," + longitude);
-					var geocoder = new google.maps.Geocoder();
-					var latlng = new google.maps.LatLng(latitude, longitude);
-					geocoder.geocode({'latLng': latlng}, function(results, status) {
-					      if (status == google.maps.GeocoderStatus.OK) {
-					        if (results[0]) {
-								
-//								console.log(results);
-								
-								var curLocation = results[0].formatted_address;
-								
-								app.model.Reports.fetch({
-									data: { location: curLocation },
-									async: false,
-
-									success: function() {
-										console.log('Reports loaded successfully: ' + app.model.Reports.length);
-										self.add_all_reports();
-									},
-
-									error: function(e) {
-										console.log('Failed to fetch reports: ' + e);
-									}
-								});
-								
-								self.elem.currentLocation.val(curLocation);
-
-					        }
-					      } else {
-					        alert("Geocoder failed due to: " + status);
-					      }
-					});
-				})
-			})
+			self.elem.refresh.tap(self.list_reports());
 
             function call_update_button(name) {
                 return function() {
@@ -281,7 +235,53 @@ bb.init = function() {
             document.addEventListener("searchbutton", call_update_button('search'))
         },
 
-        render: function() { },
+        render: function() { 
+
+		},
+
+		list_reports: function() {
+			var self = this;
+			navigator.geolocation.getCurrentPosition(
+				function(position) {
+					var latitude  = position.coords.latitude;
+					var longitude = position.coords.longitude;
+					var speed = position.coords.speed | 0;
+					var timestamp = new Date(position.timestamp);
+
+					self.elem.speed.val(speed);
+			
+					console.log('loc=' + latitude + "," + longitude);
+					var geocoder = new google.maps.Geocoder();
+					var latlng = new google.maps.LatLng(latitude, longitude);
+					geocoder.geocode({'latLng': latlng}, function(results, status) {
+				      if (status == google.maps.GeocoderStatus.OK) {
+				        if (results[0]) {
+							
+							var curLocation = results[0].formatted_address;
+							
+							app.model.Reports.fetch({
+								data: { location: curLocation },
+								async: false,
+
+								success: function() {
+									console.log('found ' + app.model.Reports.length + ' reports.');
+									self.add_all_reports();
+								},
+
+								error: function(e) {
+									console.log('Failed to fetch reports: ' + e);
+								}
+							});
+							
+							self.elem.currentLocation.val(curLocation);
+
+				        }
+				      } else {
+						alert("Geocoder failed due to: " + status);
+				      }
+				});
+			})
+		},
 
 		add_all_reports: function() {
 			var self = this;
