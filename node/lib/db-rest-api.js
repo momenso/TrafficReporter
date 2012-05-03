@@ -48,7 +48,7 @@ exports.echo = function(req, res) {
 exports.saveUser = function(user, callback) {
 	console.log('>>> SAVEUSER: ' + user.username);
 	
-	usercoll.update({ id: user.id }, user, function(err, doc) {
+	usercoll.update({ id: user.id }, user, { upsert: true }, function(err, doc) {
 		console.log('User saved ' + (err || 'successfully.'));
 		//callback(err, doc);
 		callback(err, user);
@@ -56,15 +56,18 @@ exports.saveUser = function(user, callback) {
 }
 
 exports.loadUser = function(id, callback) {
-	console.log('>>> LOADUSER:' + id);
-	
-	//var query = util.fixid({ id: id });
-	var query = { id: id };
+    console.log(">>> LOADUSER: " + id);
 
-	usercoll.findOne(query, function(err, doc) {
-		console.log('User loaded ' + (err || ('successfully: ' + doc.username)));
-		callback(err, doc);
-	});
+    var query = { id: id };
+
+    usercoll.findOne(query, function(err, doc) {
+        if (doc) {
+            var output = util.fixid(doc);
+			callback(err, output);
+        } else {
+			callback('User ' + id + ' not found');
+		}
+    });
 }
 
 exports.rest = {	

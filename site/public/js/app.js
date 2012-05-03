@@ -397,14 +397,6 @@ app.init = function() {
     app.model.state = new bb.model.State()
     app.model.Reports = new bb.model.ReportList();
 
-	http.get('/user', function(user) {
-		if (user.id) {
-			app.model.state.set({user:user});
-		} else {
-			console.log("No user!");
-		}
-	});
-
     app.view.navigation = new bb.view.Navigation(app.initialtab)
     app.view.navigation.render()
 

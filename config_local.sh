@@ -1,0 +1,5 @@
+#!/bin/sh
+export DB_PWD=P@ssw0rd
+export SESSION_KEY=S3SS10N
+export TWITTER_KEY=YuJGHNbRXwlXVTPx5LsjA
+export TWITTER_SECRET=e0kEDA075Uv7ypoyJ2YWzGgYH558XGssLGvU9kM7E
