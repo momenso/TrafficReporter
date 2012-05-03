@@ -222,7 +222,7 @@ bb.init = function() {
 				refresh: $('button#refresh')
             }
 
-			self.elem.refresh.tap(self.list_reports());
+			self.elem.refresh.tap(self.refresh_geolocation());
 
             function call_update_button(name) {
                 return function() {
@@ -238,8 +238,25 @@ bb.init = function() {
         render: function() { 
 
 		},
+		
+		request_reports: function(currentLocation) {
+			var self = this;
+			app.model.Reports.fetch({
+				data: { location: currentLocation },
+				async: false,
 
-		list_reports: function() {
+				success: function() {
+					console.log('found ' + app.model.Reports.length + ' reports.');
+					self.add_all_reports();
+				},
+
+				error: function(e) {
+					console.log('Failed to fetch reports: ' + e);
+				}
+			});
+		},
+
+		refresh_geolocation: function() {
 			var self = this;
 			navigator.geolocation.getCurrentPosition(
 				function(position) {
@@ -256,28 +273,12 @@ bb.init = function() {
 					geocoder.geocode({'latLng': latlng}, function(results, status) {
 				      if (status == google.maps.GeocoderStatus.OK) {
 				        if (results[0]) {
-							
 							var curLocation = results[0].formatted_address;
-							
-							app.model.Reports.fetch({
-								data: { location: curLocation },
-								async: false,
-
-								success: function() {
-									console.log('found ' + app.model.Reports.length + ' reports.');
-									self.add_all_reports();
-								},
-
-								error: function(e) {
-									console.log('Failed to fetch reports: ' + e);
-								}
-							});
-							
+							self.request_reports(curLocation);
 							self.elem.currentLocation.val(curLocation);
-
 				        }
 				      } else {
-						alert("Geocoder failed due to: " + status);
+						alert("Geocoder failed: " + status);
 				      }
 				});
 			})
