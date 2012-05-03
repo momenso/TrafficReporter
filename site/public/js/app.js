@@ -11,7 +11,7 @@ var app = {
             index: i++,
         }
     },
-    platform: /Android/.test(navigator.userAgent) ? 'android': 'ios',
+//    platform: /Android/.test(navigator.userAgent) ? 'android': 'ios',
     initialtab: 'monitor'
 }
 
@@ -122,9 +122,9 @@ bb.init = function() {
             }
 
             app.scrollheight = window.innerHeight - self.elem.header.height() - self.elem.footer.height()
-            if ('android' == app.platform) {
-                app.scrollheight += self.elem.header.height();
-            }
+            // if ('android' == app.platform) {
+            //     app.scrollheight += self.elem.header.height();
+            // }
 
 			app.model.state.on('change:user', function() { 
 				self.render();
@@ -358,31 +358,31 @@ app.boot = function() {
     document.ontouchmove = function(e) {
         e.preventDefault();
     }
-    $('#main').live('pagebeforecreate',
-    function() {
-        app.boot_platform()
-    })
+    // $('#main').live('pagebeforecreate',
+    // function() {
+    //     app.boot_platform()
+    // })
 }
 
-app.boot_platform = function() {
-    if ('android' == app.platform) {
-        $('#header').hide()
-        $('#footer').attr({
-            'data-role': 'header'
-        })
-        $('#content').css({
-            'margin-top': 59
-        })
-    }
-}
+// app.boot_platform = function() {
+//     if ('android' == app.platform) {
+//         $('#header').hide()
+//         $('#footer').attr({
+//             'data-role': 'header'
+//         })
+//         $('#content').css({
+//             'margin-top': 59
+//         })
+//     }
+// }
 
-app.init_platform = function() {
-    if ('android' == app.platform) {
-        $('li span.ui-icon').css({
-            'margin-top': -4
-        })
-    }
-}
+// app.init_platform = function() {
+//     if ('android' == app.platform) {
+//         $('li span.ui-icon').css({
+//             'margin-top': -4
+//         })
+//     }
+// }
 
 app.start = function() {
     $("#tab_" + app.initialtab).tap();
@@ -402,7 +402,7 @@ app.erroralert = function(error) {
 app.init = function() {
     console.log('start init')
 
-    app.init_platform()
+    // app.init_platform()
 
     bb.init()
 
