@@ -394,7 +394,9 @@ bb.init = function() {
             self.elem.send.tap(self.sendreport);
         },
 
-        render: function() { },
+        render: function() { 
+			self.elem.comment.val('');
+		},
 
 		sendreport: function() {
             var self = this;

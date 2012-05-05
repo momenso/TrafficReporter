@@ -4,14 +4,27 @@ var common = require('./common')
 var uuid = common.uuid
 var mongodb = common.mongodb
 
-
 var reportcoll = null;
 var usercoll = null;
 
 var util = {}
+
 util.validate = function(input) {
-    return true; //input.text
+	if (input.comment) {
+		if (input.comment.length > 140) {
+			return false;
+		}
+
+		if (input.speed) {
+			if (input.speed >= 0) {
+				return true;
+			}
+		}
+	}
+	
+    return false;
 }
+
 
 util.fixid = function(doc) {
     if (doc._id) {
@@ -45,15 +58,16 @@ exports.echo = function(req, res) {
     res.sendjson$(output)
 }
 
+
 exports.saveUser = function(user, callback) {
 	console.log('>>> SAVEUSER: ' + user.username);
 	
 	usercoll.update({ id: user.id }, user, { upsert: true }, function(err, doc) {
 		console.log('User saved ' + (err || 'successfully.'));
-		//callback(err, doc);
 		callback(err, user);
 	});
 }
+
 
 exports.loadUser = function(id, callback) {
     console.log(">>> LOADUSER: " + id);
@@ -70,6 +84,7 @@ exports.loadUser = function(id, callback) {
     });
 }
 
+
 exports.rest = {	
 
 	get_user: function(req, res, next) {
@@ -82,8 +97,6 @@ exports.rest = {
 			clean_user.id = req.user.id
 			clean_user.username = req.user.username
 			clean_user.service = req.user.service
-		} else {
-			console.log("No user specified?")
 		}
 
 		common.sendjson(res, clean_user);
@@ -111,27 +124,7 @@ exports.rest = {
             res.sendjson$(output);
         }))
     },
-/*
 
-    read: function(req, res) {
-        console.log(">>> READ: " + req.params)
-
-        var input = req.params
-
-        var query = util.fixid({
-            id: input.id
-        })
-
-        reportcoll.findOne(query, res.err$(function(doc) {
-            if (doc) {
-                var output = util.fixid(doc)
-                res.sendjson$(output)
-            } else {
-                res.send$(404, 'not found')
-            }
-        }))
-    },
-*/
 
     list: function(req, res) {
 
@@ -159,55 +152,6 @@ exports.rest = {
         }))
     },
 
-/*
-    update: function(req, res) {
-        var id = req.params.id
-        var input = req.body
-
-        console.log('>>> UPDATE: ' + id)
-        console.log('INPUT = ' + input.done)
-
-        if (!util.validate(input)) {
-            return res.send$(400, 'invalid')
-        }
-
-        var query = util.fixid({
-            id: id
-        })
-        reportcoll.update(query, {
-            $set: {
-                text: input.text,
-				done: input.done
-            }
-        },
-        res.err$(function(err) {
-			if (err) {
-                console.log('404')
-                res.send$(404, 'not found')
-			}
-            else {
-                // var output = util.fixid(doc)
-                // res.sendjson$(output)
-				res.end('Success');
-            }
-        }))
-    },
-
-
-    del: function(req, res) {
-        console.log('>>> DELETE')
-
-        var input = req.params
-
-        var query = util.fixid({
-            id: input.id
-        })
-        reportcoll.remove(query, res.err$(function() {
-            var output = {};
-            res.sendjson$(output);
-        }))
-    }
-*/
 }
 
 
@@ -231,10 +175,9 @@ exports.connect = function(options, callback) {
 
 			console.log('Reports collection loaded.');
             reportcoll = collection;
-            callback(/*null, database*/);
+            callback();
         });
 
-		// loads the users collection
 		db.collection('users', function(err, collection) {
 			if (err) return callback(err);
 			
