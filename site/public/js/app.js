@@ -1,4 +1,3 @@
-// TODO: auto-refesh location/reports, remove refresh button altogether
 var i = 0
 
 var app = {
