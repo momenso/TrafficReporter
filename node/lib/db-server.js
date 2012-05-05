@@ -11,8 +11,9 @@ function init_social_login() {
 	
 	function make_promise(user, promise) {
 		api.saveUser(user, function(err, user) {
-			if (err) 
+			if (err) {
 				return promise.fail(err);
+			}
 
 			promise.fulfill(user);
 		});
@@ -101,10 +102,7 @@ function init() {
         app.post('/api/echo', api.echo)
 
         app.post('/api/rest/report', api.rest.create)
-        // app.get('/api/rest/report/:id', api.rest.read)
         app.get('/api/rest/report', api.rest.list)
-        // app.put('/api/rest/report/:id', api.rest.update)
-        // app.del('/api/rest/report/:id', api.rest.del)
 
 		app.get('/user', api.rest.get_user)
     })

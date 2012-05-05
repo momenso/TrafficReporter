@@ -14,11 +14,11 @@ util.validate = function(input) {
 		if (input.comment.length > 140) {
 			return false;
 		}
+	}
 
-		if (input.speed) {
-			if (input.speed >= 0) {
-				return true;
-			}
+	if (input.speed) {
+		if (input.speed >= 0) {
+			return true;
 		}
 	}
 	

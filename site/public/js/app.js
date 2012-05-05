@@ -37,11 +37,10 @@ bb.init = function() {
 
 
     bb.model.Report = Backbone.Model.extend(_.extend({
-		// defaults: function() {
-		// 	return {
-		// 		done: false,
-		// 		order: app.model.Reports.nextOrder()
-		// 	};
+
+		// defaults: {
+		// 	"comment" : "",
+		// 	"speed" : 0
 		// },
 
 		initialize: function(item) {
@@ -49,11 +48,17 @@ bb.init = function() {
 			_.bindAll(self);
 		},
 
-		// toggle: function() {
-		// 	var self = this
-		// 	self.save({ done: !self.get("done") });
+		// validate: function(attrs) {
+		// 
+		// 	if (attrs.speed < 0) {
+		// 		return "invalid speed";
+		// 	}
+		// 	
+		// 	if (attrs.comment.length > 140) {
+		// 		return "comment too long";
+		// 	}
 		// }
-
+		
     }));
 
 
@@ -66,29 +71,7 @@ bb.init = function() {
         initialize: function() {
             var self = this
             _.bindAll(self)
-        },
-
-		// done: function() {
-		// 	var self = this
-		// 	return self.filter(function(report) { return report.get('done'); });
-		// },
-		// 
-		// remaining: function() {
-		// 	var self = this
-		// 	return self.without.apply(self, self.done());
-		// },
-		// 
-		// // TODO: enforce order by time? (more recent first)
-		// nextOrder: function() {
-		// 	var self = this
-		// 	if (!self.length) return 1;
-		// 		return self.last().get('order') + 1;
-		// },
-		// 
-		// // TODO: compare with date
-		// comparator: function(report) {
-		// 	return report.get('order');
-		// }
+        }
 		
     });
 
@@ -402,12 +385,20 @@ bb.init = function() {
             var self = this;
 			var user = app.model.state.get('user');
 			if (user) {
-				app.model.Reports.create({
+				
+				var report = app.model.Reports.create({
 					user: user.username,
 					location: self.elem.currentLocation.val(),
 					speed: self.elem.speed.val(),
 					comment: self.elem.comment.val()
+				}, { wait: true });
+
+				report.on('error', function(rep, error) {
+					setTimeout(
+						alert('Failed to submit report: ' + error.statusText), 
+						1000);
 				});
+				
 			} else {
 				alert('You must log in first!');
 			}
