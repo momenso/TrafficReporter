@@ -423,18 +423,22 @@ app.boot = function() {
 
 app.boot_platform = function() {
     if ('android' == app.platform) {
+		$('#footer').hide();
+		$('#android_navbar').show();
         // $('#header').hide()
-		$('#app_title').hide();
-		$('#header').attr({
-			'data-role': 'footer'
-		});
-        $('#footer').attr({
-            'data-role': 'header'
-        });
+		// $('#app_title').hide();
+		// $('#header').attr({
+		// 	'data-role': 'footer'
+		// });
+		//         $('#footer').attr({
+		//             'data-role': 'header'
+		//         });
         // $('#content').css({
         //     'margin-top': 59
         // })
-    }
+    } else {
+		$('#android_navbar').remove();
+	}
 }
 
 app.init_platform = function() {
