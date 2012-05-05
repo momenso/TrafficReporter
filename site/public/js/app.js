@@ -38,26 +38,10 @@ bb.init = function() {
 
     bb.model.Report = Backbone.Model.extend(_.extend({
 
-		// defaults: {
-		// 	"comment" : "",
-		// 	"speed" : 0
-		// },
-
 		initialize: function(item) {
 			var self = this;
 			_.bindAll(self);
 		},
-
-		// validate: function(attrs) {
-		// 
-		// 	if (attrs.speed < 0) {
-		// 		return "invalid speed";
-		// 	}
-		// 	
-		// 	if (attrs.comment.length > 140) {
-		// 		return "comment too long";
-		// 	}
-		// }
 		
     }));
 
@@ -223,9 +207,7 @@ bb.init = function() {
 			self.reports_refresher(3000);
         },
 
-        render: function() { 
-
-		},
+        render: function() { },
 		
 		reports_refresher: function(interval) {
 			var self = this;
