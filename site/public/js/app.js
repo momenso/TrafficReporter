@@ -20,8 +20,6 @@ var app = {
 	initialtab: 'monitor'
 }
 
-// console.log(app)
-
 var bb = {
     model: {},
     view: {}
@@ -217,7 +215,7 @@ bb.init = function() {
 			}
 			
 			// gradual decrease of the refresh rate
-			if (interval < 180000) {
+			if (interval < 30000) {
 				interval += 1000;
 			}
 			
