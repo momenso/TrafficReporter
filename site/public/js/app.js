@@ -1,9 +1,12 @@
 var i = 0
 
 var app = {
-    model: {},
-    view: {},
-    tabs: {
+    
+	model: {},
+    
+	view: {},
+    
+	tabs: {
         monitor: {
             index: i++,
         },
@@ -11,11 +14,13 @@ var app = {
             index: i++,
         }
     },
-//    platform: /Android/.test(navigator.userAgent) ? 'android': 'ios',
-    initialtab: 'monitor'
+
+	platform: /Android/.test(navigator.userAgent) ? 'android': 'ios',
+	
+	initialtab: 'monitor'
 }
 
-console.log(app)
+// console.log(app)
 
 var bb = {
     model: {},
@@ -136,11 +141,11 @@ bb.init = function() {
 			var user = app.model.state.get('user');
 			
 			if (user) {
-				console.log('logged as: ' + user.username);
+				// console.log('logged as: ' + user.username);
 				self.elem.login_btn.hide();
 				self.elem.logout_btn.show();
 			} else {
-				console.log('No user');
+				// console.log('No user');
 				self.elem.login_btn.show();
 				self.elem.logout_btn.hide();				
 			}
@@ -196,7 +201,7 @@ bb.init = function() {
 
             var previous = self.current
             var current = app.model.state.get('current')
-            console.log('tabchange prev=' + previous + ' cur=' + current)
+            // console.log('tabchange prev=' + previous + ' cur=' + current)
 
             $("#content_" + previous).hide().removeClass('leftin').removeClass('rightin')
             $("#content_" + current).show().addClass(app.tabs[previous].index <= app.tabs[current].index ? 'leftin': 'rightin')
@@ -245,8 +250,6 @@ bb.init = function() {
 			var curLocation = app.model.state.get('location');
 			if (curLocation) {
 				self.request_reports(curLocation);
-			} else {
-				console.log('no known location to refresh reports');
 			}
 			
 			setTimeout(function() { self.reports_refresher(interval); }, interval);
@@ -259,7 +262,7 @@ bb.init = function() {
 				async: false,
 
 				success: function() {
-					console.log('refreshing list of reports.');					
+					// console.log('refreshing list of reports.');					
 					self.add_all_reports();
 				},
 
@@ -292,8 +295,6 @@ bb.init = function() {
 								app.model.state.set({ location : curLocation });
 								self.request_reports(curLocation);
 								self.elem.currentLocation.val(curLocation);
-							} else {
-								console.log('Same position');
 							}
 				        }
 				      } else {
@@ -337,7 +338,6 @@ bb.init = function() {
 		add_report: function(user, comment, speed, created) {
             var self = this;
 			var clock = Date.now() - created;
-			console.log(created);
 
 			var hours = Math.round(clock / 3600000);
 			var time = "";
@@ -411,36 +411,35 @@ bb.init = function() {
 
 }
 
-
 app.boot = function() {
     document.ontouchmove = function(e) {
         e.preventDefault();
     }
-    // $('#main').live('pagebeforecreate',
-    // function() {
-    //     app.boot_platform()
-    // })
+    $('#main').live('pagebeforecreate',
+    function() {
+        app.boot_platform()
+    })
 }
 
-// app.boot_platform = function() {
-//     if ('android' == app.platform) {
-//         $('#header').hide()
-//         $('#footer').attr({
-//             'data-role': 'header'
-//         })
-//         $('#content').css({
-//             'margin-top': 59
-//         })
-//     }
-// }
+app.boot_platform = function() {
+    if ('android' == app.platform) {
+        $('#header').hide()
+        $('#footer').attr({
+            'data-role': 'header'
+        })
+        $('#content').css({
+            'margin-top': 59
+        })
+    }
+}
 
-// app.init_platform = function() {
-//     if ('android' == app.platform) {
-//         $('li span.ui-icon').css({
-//             'margin-top': -4
-//         })
-//     }
-// }
+app.init_platform = function() {
+    if ('android' == app.platform) {
+        $('li span.ui-icon').css({
+            'margin-top': -4
+        })
+    }
+}
 
 app.start = function() {
     $("#tab_" + app.initialtab).tap();
