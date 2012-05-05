@@ -190,7 +190,8 @@ bb.init = function() {
 	            content.height(app.scrollheight)
 
 	            setTimeout(function() {
-	                self.scrollers[self.current].refresh();
+					var scroller = self.scrollers[self.current];
+					if (scroller) scroller.refresh();
 	            },
 	            300)
 			}
@@ -339,14 +340,18 @@ bb.init = function() {
             var self = this;
 			var clock = Date.now() - created;
 
-			var hours = Math.round(clock / 3600000);
-			var time = "";
-			if (hours > 0) {
-				time = hours + "h ";
-				clock = clock % 3600000;
+			if (clock >= 60000) {
+				var hours = Math.round(clock / 3600000);
+				var time = "";
+				if (hours > 0) {
+					time = hours + "h ";
+					clock = clock % 3600000;
+				}
+				var minutes = Math.floor(clock / 60000);
+				time += minutes + "m";
+			} else {
+				time = (clock > 2000) ? Math.round(clock/1000) + 's' : 'just now';
 			}
-			var minutes = Math.floor(clock / 60000);
-			time += minutes + "m";
 		
 			$('<li/>')
             	.append($('<b>', { text: comment }))
