@@ -147,6 +147,9 @@ exports.rest = {
             sort: [['created', 'desc']]
         }
 
+		var oldest = new Date().getTime() - 86400000; // one day
+		reportcoll.remove({ location: input.location, created : { $lt: oldest}});
+
         reportcoll.find(query, options, res.err$(function(cursor) {
             cursor.limit(10).toArray(res.err$(function(docs) {
                 output = docs
