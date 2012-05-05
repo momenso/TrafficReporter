@@ -423,13 +423,17 @@ app.boot = function() {
 
 app.boot_platform = function() {
     if ('android' == app.platform) {
-        $('#header').hide()
+        // $('#header').hide()
+		$('#app_title').hide();
+		$('#header').attr({
+			'data-role': 'footer'
+		});
         $('#footer').attr({
             'data-role': 'header'
-        })
-        $('#content').css({
-            'margin-top': 59
-        })
+        });
+        // $('#content').css({
+        //     'margin-top': 59
+        // })
     }
 }
 
