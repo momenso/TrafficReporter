@@ -124,11 +124,9 @@ bb.init = function() {
 			var user = app.model.state.get('user');
 			
 			if (user) {
-				// console.log('logged as: ' + user.username);
 				self.elem.login_btn.hide();
 				self.elem.logout_btn.show();
 			} else {
-				// console.log('No user');
 				self.elem.login_btn.show();
 				self.elem.logout_btn.hide();				
 			}
@@ -236,6 +234,11 @@ bb.init = function() {
 				self.request_reports(curLocation);
 			}
 			
+			// gradual decrease of the refresh rate
+			if (interval < 180000) {
+				interval += 1000;
+			}
+			
 			setTimeout(function() { self.reports_refresher(interval); }, interval);
 		},
 				
@@ -246,7 +249,6 @@ bb.init = function() {
 				async: false,
 
 				success: function() {
-					// console.log('refreshing list of reports.');					
 					self.add_all_reports();
 				},
 
