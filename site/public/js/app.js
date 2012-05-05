@@ -1,3 +1,4 @@
+// TODO: auto-refesh location/reports, remove refresh button altogether
 var i = 0
 
 var app = {
@@ -213,32 +214,45 @@ bb.init = function() {
 
     bb.view.Monitor = Backbone.View.extend({
         initialize: function() {
-            var self = this
-            _.bindAll(self)
+            var self = this;
+            _.bindAll(self);
 
             self.elem = {
 				currentLocation: $('input#currentLocation'),
 				speed: $('input#speed'),
-				refresh: $('button#refresh')
+				list: $('#reportsListView')
             }
-
-			self.elem.refresh.tap(self.refresh_geolocation());
 
             function call_update_button(name) {
                 return function() {
-                    self.update_button(name)
+                    self.update_button(name);
                 }
             }
 
-            document.addEventListener("backbutton", call_update_button('back'))
-            document.addEventListener("menubutton", call_update_button('menu'))
-            document.addEventListener("searchbutton", call_update_button('search'))
+            document.addEventListener("backbutton", call_update_button('back'));
+            document.addEventListener("menubutton", call_update_button('menu'));
+            document.addEventListener("searchbutton", call_update_button('search'));
+
+			self.monitor_geolocation();
+			self.reports_refresher(3000);
         },
 
         render: function() { 
 
 		},
 		
+		reports_refresher: function(interval) {
+			var self = this;
+			var curLocation = app.model.state.get('location');
+			if (curLocation) {
+				self.request_reports(curLocation);
+			} else {
+				console.log('no known location to refresh reports');
+			}
+			
+			setTimeout(function() { self.reports_refresher(interval); }, interval);
+		},
+				
 		request_reports: function(currentLocation) {
 			var self = this;
 			app.model.Reports.fetch({
@@ -246,19 +260,19 @@ bb.init = function() {
 				async: false,
 
 				success: function() {
-					console.log('found ' + app.model.Reports.length + ' reports.');
+					console.log('refreshing list of reports.');					
 					self.add_all_reports();
 				},
 
-				error: function(e) {
-					console.log('Failed to fetch reports: ' + e);
+				error: function(err) {
+					console.log('failed to fetch reports. ' + err.statusText);
 				}
 			});
 		},
 
-		refresh_geolocation: function() {
+		monitor_geolocation: function() {
 			var self = this;
-			navigator.geolocation.getCurrentPosition(
+			navigator.geolocation.watchPosition(
 				function(position) {
 					var latitude  = position.coords.latitude;
 					var longitude = position.coords.longitude;
@@ -267,19 +281,35 @@ bb.init = function() {
 
 					self.elem.speed.val(speed);
 			
-					console.log('loc=' + latitude + "," + longitude);
+					console.log('currentLocation: loc=' + latitude + "," + longitude);
 					var geocoder = new google.maps.Geocoder();
 					var latlng = new google.maps.LatLng(latitude, longitude);
-					geocoder.geocode({'latLng': latlng}, function(results, status) {
+					geocoder.geocode( {'latLng': latlng}, function(results, status) {
 				      if (status == google.maps.GeocoderStatus.OK) {
 				        if (results[0]) {
 							var curLocation = results[0].formatted_address;
-							self.request_reports(curLocation);
-							self.elem.currentLocation.val(curLocation);
+							var lastKnownLocation = app.model.state.get('location');
+							if (curLocation != lastKnownLocation) {
+								app.model.state.set({ location : curLocation });
+								self.request_reports(curLocation);
+								self.elem.currentLocation.val(curLocation);
+							} else {
+								console.log('Same position');
+							}
 				        }
 				      } else {
 						alert("Geocoder failed: " + status);
 				      }
+				},
+				
+				function(error) {
+					alert('Geolocation not available!');
+					console.log('GeoLocation error: ' + error.code + ' - ' + error.message);
+				},
+				
+				// options
+				{
+					frequency : 5000 
 				});
 			})
 		},
@@ -289,25 +319,43 @@ bb.init = function() {
 			
 			//$('#reportsListView').empty();
 			// $('#reportsListView').children().remove('li');
-			$('#reportsListView').children().not('[role=heading]').remove('li');
+			self.elem.list.children().not('[role=heading]').remove('li');
 			
-			app.model.Reports.each(function(report) {
-				report = report.toJSON();
-				var minutes = Math.round((Date.now() - report.created) / 60000);
-				self.add_report(report.user, report.comment, report.speed, minutes);
-			});
+			if (app.model.Reports.length > 0) {
+						
+				app.model.Reports.each(function(report) {
+					report = report.toJSON();
+					var minutes = Math.round((Date.now() - report.created) / 60000);
+					self.add_report(report.user, report.comment, report.speed, minutes);
+				});
+			
+			} else {
+				self.show_no_reports();
+			}
+			
+			app.model.state.trigger('scroll-refresh')
 		},
 
 		add_report: function(user, comment, speed, time) {
-			var list = $('#reportsListView');
-            $('<li/>')
+            var self = this;
+
+			$('<li/>')
             	.append($('<b>', { text: comment }))
             	.append($('<p>', { text: user + ' @ ' + speed + ' km/h' }))
             	.append($('<span />', { text: time + ' min', class: 'ui-li-count'}))
-            	.appendTo(list);
-            list.listview('refresh');
+            	.appendTo(self.elem.list);
 
-			app.model.state.trigger('scroll-refresh')
+            self.elem.list.listview('refresh');
+		},
+		
+		show_no_reports : function() {
+			var self = this;
+			
+            $('<li/>')
+            	.append($('<p>', { text: 'No reports for this location, be the first!' }))
+            	.appendTo(self.elem.list);
+
+            self.elem.list.listview('refresh');
 		},
 
         update_button: function(name) {
