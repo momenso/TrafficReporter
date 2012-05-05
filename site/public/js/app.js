@@ -324,8 +324,7 @@ bb.init = function() {
 						
 				app.model.Reports.each(function(report) {
 					report = report.toJSON();
-					var minutes = Math.round((Date.now() - report.created) / 60000);
-					self.add_report(report.user, report.comment, report.speed, minutes);
+					self.add_report(report.user, report.comment, report.speed, report.created);
 				});
 			
 			} else {
@@ -335,13 +334,24 @@ bb.init = function() {
 			app.model.state.trigger('scroll-refresh')
 		},
 
-		add_report: function(user, comment, speed, time) {
+		add_report: function(user, comment, speed, created) {
             var self = this;
+			var clock = Date.now() - created;
+			console.log(created);
 
+			var hours = Math.round(clock / 3600000);
+			var time = "";
+			if (hours > 0) {
+				time = hours + "h ";
+				clock = clock % 3600000;
+			}
+			var minutes = Math.floor(clock / 60000);
+			time += minutes + "m";
+		
 			$('<li/>')
             	.append($('<b>', { text: comment }))
             	.append($('<p>', { text: user + ' @ ' + speed + ' km/h' }))
-            	.append($('<span />', { text: time + ' min', class: 'ui-li-count'}))
+            	.append($('<span />', { text: time, class: 'ui-li-count'}))
             	.appendTo(self.elem.list);
 
             self.elem.list.listview('refresh');
