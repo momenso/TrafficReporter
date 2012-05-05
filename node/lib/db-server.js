@@ -6,6 +6,7 @@ var api = require('./db-rest-api')
 var connect = common.connect
 var everyauth = common.everyauth
 
+
 function init_social_login() {
 	
 	function make_promise(user, promise) {
@@ -55,6 +56,7 @@ function init_social_login() {
 		.redirectPath('/');			
 }
 
+
 function init() {
 
 	init_social_login();
@@ -99,10 +101,10 @@ function init() {
         app.post('/api/echo', api.echo)
 
         app.post('/api/rest/report', api.rest.create)
-        app.get('/api/rest/report/:id', api.rest.read)
+        // app.get('/api/rest/report/:id', api.rest.read)
         app.get('/api/rest/report', api.rest.list)
-        app.put('/api/rest/report/:id', api.rest.update)
-        app.del('/api/rest/report/:id', api.rest.del)
+        // app.put('/api/rest/report/:id', api.rest.update)
+        // app.del('/api/rest/report/:id', api.rest.del)
 
 		app.get('/user', api.rest.get_user)
     })

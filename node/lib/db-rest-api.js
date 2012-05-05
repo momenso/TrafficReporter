@@ -86,8 +86,6 @@ exports.rest = {
 			console.log("No user specified?")
 		}
 
-		//common.util.sendjson(res,clean_user)
-		//res.sendjson$(clean_user);
 		common.sendjson(res, clean_user);
 	},
 
@@ -113,7 +111,7 @@ exports.rest = {
             res.sendjson$(output);
         }))
     },
-
+/*
 
     read: function(req, res) {
         console.log(">>> READ: " + req.params)
@@ -133,7 +131,7 @@ exports.rest = {
             }
         }))
     },
-
+*/
 
     list: function(req, res) {
 
@@ -161,7 +159,7 @@ exports.rest = {
         }))
     },
 
-
+/*
     update: function(req, res) {
         var id = req.params.id
         var input = req.body
@@ -209,7 +207,7 @@ exports.rest = {
             res.sendjson$(output);
         }))
     }
-
+*/
 }
 
 
