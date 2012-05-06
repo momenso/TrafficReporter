@@ -1,3 +1,5 @@
+// TrafficReporter
+
 var app = {
     
 	model: {},
@@ -76,9 +78,6 @@ bb.init = function() {
             }
 
             app.scrollheight = window.innerHeight - self.elem.header.height() - self.elem.footer.height()
-            // if ('android' == app.platform) {
-            //     app.scrollheight += self.elem.header.height();
-            // }
 
 			app.model.state.on('change:user', function() { 
 				self.render();
@@ -234,6 +233,7 @@ bb.init = function() {
 					self.elem.speed.val(speed);
 			
 					//console.log('currentLocation: loc=' + latitude + "," + longitude);
+					//alert('currentLocation: loc=' + latitude + "," + longitude);
 					var geocoder = new google.maps.Geocoder();
 					var latlng = new google.maps.LatLng(latitude, longitude);
 					geocoder.geocode( {'latLng': latlng}, function(results, status) {
@@ -248,7 +248,7 @@ bb.init = function() {
 							}
 				        }
 				      } else {
-						alert("Geocoder failed: " + status);
+						alert("Geolocation resolution: " + status);
 				      }
 				},
 				
@@ -300,12 +300,12 @@ bb.init = function() {
 			} else {
 				time = (clock > 2000) ? Math.round(clock / 1000) + 's' : 'just now';
 			}
-		
+
 			$('<li/>')
-            	.append($('<b>', { text: comment }))
-            	.append($('<p>', { text: user + ' @ ' + speed + ' km/h' }))
-            	.append($('<span />', { text: time, class: 'ui-li-count'}))
-            	.appendTo(self.elem.list);
+	           	.append($("<b>", { text: comment }))
+	           	.append($("<p>", { text: user + " @ " + speed + " km/h" }))
+				.append($("<span />", { text: time, "class": "ui-li-count" }))
+				.appendTo(self.elem.list);
 
             self.elem.list.listview('refresh');
 		},
@@ -343,7 +343,9 @@ bb.init = function() {
         },
 
         render: function() { 
+			var self = this;
 			self.elem.comment.val('');
+			$(self).css('min-height', app.scrollheight+'px');
 		},
 
 		sendreport: function() {
@@ -378,9 +380,8 @@ app.boot = function() {
     document.ontouchmove = function(e) {
         e.preventDefault();
     }
-    $('#main').live('pagebeforecreate',
-    function() {
-        app.boot_platform()
+    $('#main').live('pagebeforecreate', function() {
+       	app.boot_platform();
     })
 }
 
@@ -391,14 +392,6 @@ app.boot_platform = function() {
     } else {
 		$('#android_navbar').remove();
 	}
-}
-
-app.init_platform = function() {
-    if ('android' == app.platform) {
-        $('li span.ui-icon').css({
-            'margin-top': -4
-        })
-    }
 }
 
 app.start = function() {
@@ -419,8 +412,6 @@ app.erroralert = function(error) {
 app.init = function() {
     console.log('start init');
 
-    //app.init_platform();
-
     bb.init();
 
     app.model.state = new bb.model.State();
@@ -434,12 +425,12 @@ app.init = function() {
 
     app.view.monitor = new bb.view.Monitor();
     app.view.Report = new bb.view.Report();
+	app.view.Report.render();
 
     app.start();
 
     console.log('end init');
 }
-
 
 app.boot();
 

@@ -7,10 +7,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes" /> 
   <meta name="apple-mobile-web-app-status-bar-style" content="default" /> 
 
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="apple-touch-icon-114x114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png">
-  <link rel="apple-touch-startup-image" href="splash-320x460.png" /> 
-
   <link rel="stylesheet" href="css/jquery.mobile.css" />
   <link rel="stylesheet" href="css/jquery.mobile.structure.css" />
   <link rel="stylesheet" href="css/app.css" />
@@ -43,9 +39,9 @@
 <div id="main" data-role="page" data-theme="a">
 
   <div id="header" data-role="header" data-position="inline">
-	<a href="/auth/twitter" id="login_btn" rel="external" data-role="button" data-icon="check">Login</a>
+	<a href="/auth/twitter" id="login_btn" rel="external" data-role="button">Login</a>
     <h1 id="app_title">Traffic Reporter</h1>
-	<a href="/logout" id="logout_btn" rel="external" data-role="button" data-icon="minus">Logout</a>
+	<a href="/logout" id="logout_btn" rel="external" data-role="button">Logout</a>
 	
 	<div id='android_navbar' data-role="navbar">
       <ul id="tabbar">
@@ -53,7 +49,6 @@
         <li><a id="tab_report">Report</a></li>
       </ul>
     </div>
-    
   </div>
 
   <div id="content" data-role="content">	
@@ -84,7 +79,7 @@
 
   </div>
 
-  <div id="footer" data-role="footer" class="ui-bar" data-position="fixed">
+  <div id="footer" data-role="footer" >
     <div data-role="navbar">
       <ul id="tabbar">
         <li><a id="tab_monitor" class="ui-btn-active">Monitor</a></li>
