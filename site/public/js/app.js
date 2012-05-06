@@ -1,18 +1,10 @@
-var i = 0
-
 var app = {
     
 	model: {},
-    
 	view: {},
-    
 	tabs: {
-        monitor: {
-            index: i++,
-        },
-        report: {
-            index: i++,
-        }
+        monitor: { index: 0 },
+        report: { index: 1 }
     },
 
 	platform: /Android/.test(navigator.userAgent) ? 'android': 'ios',
@@ -51,8 +43,8 @@ bb.init = function() {
         url: '/api/rest/report',
 
         initialize: function() {
-            var self = this
-            _.bindAll(self)
+            var self = this;
+            _.bindAll(self);
         }
 		
     });
@@ -60,8 +52,8 @@ bb.init = function() {
 
     bb.view.Navigation = Backbone.View.extend({
         initialize: function(items) {
-            var self = this
-            _.bindAll(self)
+            var self = this;
+            _.bindAll(self);
 
             self.elem = {
                 header: $("#header"),
@@ -69,13 +61,6 @@ bb.init = function() {
 				login_btn: $("#login_btn"),
 				logout_btn: $("#logout_btn")
             }
-
-            // self.elem.header.css({
-            //     zIndex: 1000
-            // })
-            // self.elem.footer.css({
-            //     zIndex: 1000
-            // })
 
             function handletab(tabname) {
                 return function() {
@@ -87,14 +72,13 @@ bb.init = function() {
 
             var tabindex = 0
             for (var tabname in app.tabs) {
-                // console.log(tabname);
                 $("#tab_" + tabname).tap(handletab(tabname));
             }
 
             app.scrollheight = window.innerHeight - self.elem.header.height() - self.elem.footer.height()
-            // if ('android' == app.platform) {
-            //     app.scrollheight += self.elem.header.height();
-            // }
+            if ('android' == app.platform) {
+                app.scrollheight += self.elem.header.height();
+            }
 
 			app.model.state.on('change:user', function() { 
 				self.render();
@@ -150,32 +134,32 @@ bb.init = function() {
 	                self.scrollers[self.current] = new iScroll("content_" + self.current);
 	            }
 				
-	            content.height(app.scrollheight)
+	            content.height(app.scrollheight);
 
 	            setTimeout(function() {
 					var scroller = self.scrollers[self.current];
 					if (scroller) scroller.refresh();
 	            },
-	            300)
+	            300);
 			}
         },
 
         tabchange: function() {
-            var self = this
+            var self = this;
 
-            var previous = self.current
-            var current = app.model.state.get('current')
-            // console.log('tabchange prev=' + previous + ' cur=' + current)
+            var previous = self.current;
+            var current = app.model.state.get('current');
+            // console.log('tabchange prev=' + previous + ' cur=' + current);
 
-            $("#content_" + previous).hide().removeClass('leftin').removeClass('rightin')
-            $("#content_" + current).show().addClass(app.tabs[previous].index <= app.tabs[current].index ? 'leftin': 'rightin')
+            $("#content_" + previous).hide().removeClass('leftin').removeClass('rightin');
+            $("#content_" + current).show().addClass(app.tabs[previous].index <= app.tabs[current].index ? 'leftin': 'rightin');
 
 			$("#tab_" + previous).removeClass('ui-btn-active');
 			$("#tab_" + current).addClass('ui-btn-active');
 			
-            self.current = current
+            self.current = current;
 
-            self.render()
+            self.render();
         }
     })
 
@@ -215,7 +199,7 @@ bb.init = function() {
 			}
 			
 			// gradual decrease of the refresh rate
-			if (interval < 30000) {
+			if (interval < 6000) {
 				interval += 1000;
 			}
 			
@@ -249,7 +233,7 @@ bb.init = function() {
 
 					self.elem.speed.val(speed);
 			
-					console.log('currentLocation: loc=' + latitude + "," + longitude);
+					//console.log('currentLocation: loc=' + latitude + "," + longitude);
 					var geocoder = new google.maps.Geocoder();
 					var latlng = new google.maps.LatLng(latitude, longitude);
 					geocoder.geocode( {'latLng': latlng}, function(results, status) {
@@ -283,8 +267,7 @@ bb.init = function() {
 		add_all_reports: function() {
 			var self = this;
 			
-			//$('#reportsListView').empty();
-			// $('#reportsListView').children().remove('li');
+			// empty list
 			self.elem.list.children().not('[role=heading]').remove('li');
 			
 			if (app.model.Reports.length > 0) {
@@ -298,7 +281,7 @@ bb.init = function() {
 				self.show_no_reports();
 			}
 			
-			app.model.state.trigger('scroll-refresh')
+			app.model.state.trigger('scroll-refresh');
 		},
 
 		add_report: function(user, comment, speed, created) {
@@ -315,7 +298,7 @@ bb.init = function() {
 				var minutes = Math.floor(clock / 60000);
 				time += minutes + "m";
 			} else {
-				time = (clock > 2000) ? Math.round(clock/1000) + 's' : 'just now';
+				time = (clock > 2000) ? Math.round(clock / 1000) + 's' : 'just now';
 			}
 		
 			$('<li/>')
@@ -338,8 +321,8 @@ bb.init = function() {
 		},
 
         update_button: function(name) {
-            var self = this
-            self.elem.button.text(name)
+            var self = this;
+            self.elem.button.text(name);
         }
     })
 
@@ -405,17 +388,6 @@ app.boot_platform = function() {
     if ('android' == app.platform) {
 		$('#footer').hide();
 		$('#android_navbar').show();
-        // $('#header').hide()
-		// $('#app_title').hide();
-		// $('#header').attr({
-		// 	'data-role': 'footer'
-		// });
-		//         $('#footer').attr({
-		//             'data-role': 'header'
-		//         });
-        // $('#content').css({
-        //     'margin-top': 59
-        // })
     } else {
 		$('#android_navbar').remove();
 	}
@@ -441,34 +413,34 @@ app.start = function() {
 }
 
 app.erroralert = function(error) {
-    alert(error)
+    alert(error);
 }
 
 app.init = function() {
-    console.log('start init')
+    console.log('start init');
 
-    // app.init_platform()
+    app.init_platform();
 
-    bb.init()
+    bb.init();
 
-    app.model.state = new bb.model.State()
+    app.model.state = new bb.model.State();
     app.model.Reports = new bb.model.ReportList();
 
-    app.view.navigation = new bb.view.Navigation(app.initialtab)
-    app.view.navigation.render()
+    app.view.navigation = new bb.view.Navigation(app.initialtab);
+    app.view.navigation.render();
 
-    app.view.content = new bb.view.Content(app.initialtab)
-    app.view.content.render()
+    app.view.content = new bb.view.Content(app.initialtab);
+    app.view.content.render();
 
-    app.view.monitor = new bb.view.Monitor()
-    app.view.Report = new bb.view.Report()
+    app.view.monitor = new bb.view.Monitor();
+    app.view.Report = new bb.view.Report();
 
-    app.start()
+    app.start();
 
-    console.log('end init')
+    console.log('end init');
 }
 
 
-app.boot()
+app.boot();
 
-$(app.init)
+$(app.init);
