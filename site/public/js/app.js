@@ -76,9 +76,9 @@ bb.init = function() {
             }
 
             app.scrollheight = window.innerHeight - self.elem.header.height() - self.elem.footer.height()
-            if ('android' == app.platform) {
-                app.scrollheight += self.elem.header.height();
-            }
+            // if ('android' == app.platform) {
+            //     app.scrollheight += self.elem.header.height();
+            // }
 
 			app.model.state.on('change:user', function() { 
 				self.render();
@@ -419,7 +419,7 @@ app.erroralert = function(error) {
 app.init = function() {
     console.log('start init');
 
-    app.init_platform();
+    //app.init_platform();
 
     bb.init();
 
